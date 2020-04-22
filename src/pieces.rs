@@ -65,6 +65,8 @@ impl Piece for Pawn {
                 if x > my_x && my_y < 7 {
                     possible.push(Pos(my_x-1, my_y+1));
                 }
+            }else if my_y < 7 {
+                possible.push(Pos(my_x-1, my_y+1));
             }
 
             if &board_state.get("diag2").unwrap().len() > &0 {
@@ -73,6 +75,8 @@ impl Piece for Pawn {
                 if x > my_x && my_y > 0{
                     possible.push(Pos(my_x-1, my_y-1));
                 }
+            }else if my_y > 0{
+                possible.push(Pos(my_x-1, my_y-1));
             }
 
             for i in board_state.get("col").unwrap().into_iter(){
@@ -95,6 +99,8 @@ impl Piece for Pawn {
                 if x < my_x && my_y > 0 {
                     possible.push(Pos(my_x+1, my_y-1))
                 }
+            }else if my_y > 0 {
+                possible.push(Pos(my_x+1, my_y-1))
             }
 
             let diag2_rev = board_state.get_mut("diag2").unwrap();
@@ -106,6 +112,8 @@ impl Piece for Pawn {
                 if x < my_x && my_y < 7{
                     possible.push(Pos(my_x+1, my_y+1))
                 }
+            }else if my_y < 7{
+                possible.push(Pos(my_x+1, my_y+1))
             }
 
             for i in board_state.get("col").unwrap().into_iter(){
@@ -116,6 +124,7 @@ impl Piece for Pawn {
                 }
             }
         }
+    println!("{:?}", possible);
        Some(possible) 
     }
 

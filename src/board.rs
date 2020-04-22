@@ -82,32 +82,40 @@ impl <'a, T> Board <'a, T>
         println!("    a   b   c   d   e   f   g   h  ", );
     }
 
-    pub fn check_turn(&self, pos: &pieces::Pos, turn: &str) -> bool {
-        let pieces::Pos(x,y) = pos;
+    pub fn check_turn(&self, pos_from: &pieces::Pos, pos_to: &pieces::Pos, turn: &str) -> bool {
+        let turn_bool = (turn == "white");
+        let mut res = true;
+        let pieces::Pos(x,y) = pos_from;
         let piece = &self.board[*x as usize][*y as usize];
         match piece {
             Some(p) => {
-                if p.get_color(){
-                    if turn == "white"{
-                        return true;
-                    }
-                } else {
-                    if turn == "black"{
-                        return true;
-                    }
+                if p.get_color() != turn_bool{
+                    println!("wrong piece, it's {}'s turn_bool", turn);
+                    res = false;
                 }
-                println!("wrong piece, it's {}'s turn", turn);
-                return false;
             },
             None => {
                 println!("no piece in this location");
-                return false;
+                res =  false;
             }
         }
+
+        let pieces::Pos(x,y) = pos_to;
+        let piece = &self.board[*x as usize][*y as usize];
+        match piece {
+            Some(p) => {
+                if p.get_color() == turn_bool {
+                    println!("cant eat your own piece");
+                    res = false;
+                }   
+            },
+            None => ()
+        }
+        res
     }
 
     pub fn move_piece(&mut self, pos_from: pieces::Pos, pos_to: pieces::Pos, turn: &str) -> bool {
-    if self.check_turn(&pos_from, turn) {
+    if self.check_turn(&pos_from, &pos_to, turn) {
         let pieces::Pos(x,y) = pos_from;
         let state = self.get_state(pos_from).clone();
         let piece = &mut self.board[x as usize][y as usize];
