@@ -124,7 +124,6 @@ impl Piece for Pawn {
                 }
             }
         }
-    println!("{:?}", possible);
        Some(possible) 
     }
 
