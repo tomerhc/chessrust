@@ -5,23 +5,17 @@ use crate::pieces;
 use crate::pieces::Piece;
 
 
-pub struct Board <'a, T> 
-    where T: Piece + 'a
+pub struct Board 
 {
-    pub board: Vec<Vec<Option<&'a mut T>>>,
-    pub eaten_black: Vec<&'a T>,
-    pub eaten_white: Vec<&'a T>,
+    pub board: Vec<Vec<Option<Box<dyn Piece>>>>,
 }
 
-impl <'a, T> Board <'a, T> 
- where T: Piece + 'a
+impl Board
 {
-    pub fn new() -> Board <'a, T>{
+    pub fn new() -> Board{
         let mut board = Vec::with_capacity(8);
-       // let mut eaten_white = vec![];
-       // let mut eaten_black = vec![];
-        let eaten_white = vec![];
-        let eaten_black = vec![];
+        //let eaten_white = vec![];
+        //let eaten_black = vec![];
 
         for _x in 0..8 {
             let mut row = Vec::with_capacity(8);
@@ -33,26 +27,26 @@ impl <'a, T> Board <'a, T>
 
         Board {
             board: board,
-            eaten_white: eaten_white,
-            eaten_black: eaten_black
+            //eaten_white: eaten_white,
+            //eaten_black: eaten_black
         }
     }
 
-    pub fn put_piece (&mut self, piece: &'a mut T) {
+    pub fn put_piece (&mut self, piece: Box<dyn Piece>) {
         let pieces::Pos(x,y) = piece.get_cur_pos();
         self.board[x as usize][y as usize] = Some(piece);
     }
     
-    pub fn eat_piece (&mut self, pos: pieces::Pos){
-        let pieces::Pos(x,y) = pos;
-        let p = self.board[x as usize].remove(y as usize).unwrap();
-        self.board[x as usize].insert(y as usize, None);
-        match p.get_color() {
-            true => self.eaten_white.push(p),
-            false => self.eaten_black.push(p)
-        };
-    }
-
+//    pub fn eat_piece (&mut self, pos: pieces::Pos){
+//        let pieces::Pos(x,y) = pos;
+//        let p = self.board[x as usize].remove(y as usize).unwrap();
+//        self.board[x as usize].insert(y as usize, None);
+//        match p.get_color() {
+//            true => self.eaten_white.push(p),
+//            false => self.eaten_black.push(p)
+//        };
+//    }
+//
     pub fn show(&self) {
         println!("    a   b   c   d   e   f   g   h  ", );
         println!("  +---+---+---+---+---+---+---+---+", );
@@ -83,7 +77,7 @@ impl <'a, T> Board <'a, T>
     }
 
     pub fn check_turn(&self, pos_from: &pieces::Pos, pos_to: &pieces::Pos, turn: &str) -> bool {
-        let turn_bool = (turn == "white");
+        let turn_bool = turn == "white";
         let mut res = true;
         let pieces::Pos(x,y) = pos_from;
         let piece = &self.board[*x as usize][*y as usize];

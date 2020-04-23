@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 pub trait Piece {
-    fn new(color: bool) -> Self;
+//    fn new(color: bool) -> Self;
     fn init(&mut self, num:u8, board_state: HashMap<String, Vec<Pos>>);
     fn move_piece(&mut self, board_state: HashMap<String, Vec<Pos>>, pos: Pos) -> bool; 
     fn calc_legal_moves(&self, board_state: HashMap<String, Vec<Pos>>) -> Option<Vec<Pos>>;
@@ -11,14 +11,14 @@ pub trait Piece {
     fn get_color(&self) -> bool;
     fn get_piece_type(&self) -> String;
     fn update_legal_moves(&mut self, board_state: HashMap<String, Vec<Pos>>);
-    fn is_my_group<T: Piece>(&self, other: &T) -> bool {
-        self.get_color() == other.get_color()
-    }
-    fn is_on_board(pos: &Pos) -> bool {
-        let Pos(x,y) = pos;
-        0 < *x && *x < 8 && 0 < *y && *y<8
-    }
-    
+//    fn is_my_group<T: Piece>(&self, other: &T) -> bool {
+//        self.get_color() == other.get_color()
+//    }
+//    fn is_on_board(pos: &Pos) -> bool {
+//        let Pos(x,y) = pos;
+//        0 < *x && *x < 8 && 0 < *y && *y<8
+//    }
+//    
 
 }
 
@@ -32,8 +32,8 @@ pub struct Pawn {
     pub piece_type: String,
 }
 
-impl Piece for Pawn {
-    fn new(color:bool) -> Pawn {
+impl Pawn {
+    pub fn new(color:bool) -> Pawn {
         Pawn {
             color: color,
             position: Pos(0,0),
@@ -41,6 +41,10 @@ impl Piece for Pawn {
             piece_type: String::from("pawn")
         }
     }
+
+}
+
+impl Piece for Pawn {
 
     fn init(&mut self, num: u8, board_state: HashMap<String, Vec<Pos>>){
         self.position = self.set_init_pos(num);
@@ -182,8 +186,8 @@ pub struct Rook {
     pub piece_type: String,
 }
 
-impl Piece for Rook {
-    fn new(color:bool) -> Rook {
+impl Rook {
+    pub fn new(color:bool) -> Rook {
         Rook {
             color: color,
             position: Pos(0,0),
@@ -191,6 +195,10 @@ impl Piece for Rook {
             piece_type: String::from("rook")
         }
     }
+}
+
+
+impl Piece for Rook {
 
     fn init(&mut self, num: u8, board_state: HashMap<String, Vec<Pos>>){
         self.position = self.set_init_pos(num);
@@ -205,9 +213,9 @@ impl Piece for Rook {
         }
     }
 
-    fn calc_legal_moves(&self, mut board_state: HashMap<String, Vec<Pos>>) -> Option<Vec<Pos>> {
+    fn calc_legal_moves(&self, board_state: HashMap<String, Vec<Pos>>) -> Option<Vec<Pos>> {
         let mut possible = vec![];
-        let Pos(my_x, my_y) = self.position;
+        //let Pos(my_x, my_y) = self.position;
         let col_len = board_state.get("col").unwrap().len();
         let row_len = board_state.get("row").unwrap().len();
 

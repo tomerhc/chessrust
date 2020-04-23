@@ -4,43 +4,57 @@ mod game;
 use crate::pieces::Piece;
 
 fn main() {
-    let mut board: board::Board<pieces::Rook>= board::Board::new();
-    let mut white_pieces = vec![];
-    //for i in 0..8{
-    //    let mut pawn = pieces::Pawn::new(false);
-    //    pawn.init(i, board.get_state(pieces::Pos(6,i)));
-    //    white_pieces.push(Box::new(pawn));
-    //}
+    let mut board = board::Board::new();
+    let mut white_pawns= vec![];
+    for i in 0..8{
+        let mut pawn = pieces::Pawn::new(false);
+        pawn.init(i, board.get_state(pieces::Pos(6,i)));
+        white_pawns.push(pawn);
+    }
 
+    let mut white_rooks= vec![];
     for i in 0..2{
         let mut rook = pieces::Rook::new(false);
         let y = if i == 0 {0} else {7};
         rook.init(i, board.get_state(pieces::Pos(7, y)));
-        white_pieces.push(Box::new(rook));
+        white_rooks.push(rook);
     }
 
-    for p in white_pieces.iter_mut(){
-        board.put_piece(p);
+    let length  = white_pawns.len();
+    for _ in 0..length {
+        board.put_piece(Box::new(white_pawns.pop().unwrap()));
+    }
+    
+    let length  = white_rooks.len();
+    for _ in 0..length {
+        board.put_piece(Box::new(white_rooks.pop().unwrap()));
     }
 
-    let mut black_pieces = vec![];
-    //for i in 0..8{
-    //    let mut pawn = pieces::Pawn::new(true);
-    //    pawn.init(i, board.get_state(pieces::Pos(1,i)));
-    //    black_pieces.push(Box::new(pawn));
-    //}
+    let mut black_pawns = vec![];
+    for i in 0..8{
+        let mut pawn = pieces::Pawn::new(true);
+        pawn.init(i, board.get_state(pieces::Pos(1,i)));
+        black_pawns.push(pawn);
+    }
 
+    let mut black_rooks = vec![];
     for i in 0..2{
         let mut rook = pieces::Rook::new(true);
         let y = if i == 0 {0} else {7};
         rook.init(i, board.get_state(pieces::Pos(0, y)));
-        black_pieces.push(Box::new(rook));
+        black_rooks.push(rook);
     }
 
-    for p in black_pieces.iter_mut(){
-        board.put_piece(p);
-    }   
     
+    let length  = black_pawns.len();
+    for _ in 0..length {
+        board.put_piece(Box::new(black_pawns.pop().unwrap()));
+    }
+
+    let length  = black_rooks.len();
+    for _ in 0..length {
+        board.put_piece(Box::new(black_rooks.pop().unwrap()));
+    }
     //let state = board.get_state(pieces::Pos(3,3));
     //let mut bla = vec![];
     //println!("{:?}", state.get("diag1").unwrap());
@@ -49,7 +63,7 @@ fn main() {
     //    p.position = i.clone();
     //    bla.push(p);
     //}
-    //for p in bla.iter_mut(){
+    //for p in bla.iter(){
     //    board.put_piece(p);
     //}
     //board.show();

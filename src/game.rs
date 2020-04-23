@@ -25,8 +25,7 @@ pub fn take_input(turn: &str) -> String {
     inp
 }
 
-pub fn play<T>(mut my_board: board::Board<T>) 
-    where T: pieces::Piece
+pub fn play(mut my_board: board::Board) 
 {
     my_board.update_board();
     my_board.show();
@@ -37,7 +36,7 @@ pub fn play<T>(mut my_board: board::Board<T>)
             break;
         }
         let command = parse_command(&command);
-        let (mut src, mut dst): (pieces::Pos, pieces::Pos);
+        //let (mut src, mut dst): (pieces::Pos, pieces::Pos);
         match command {
             Some((src,dst)) => {
                 if my_board.move_piece(src, dst, turn){
