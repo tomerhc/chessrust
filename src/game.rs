@@ -28,6 +28,7 @@ pub fn take_input(turn: &str) -> String {
 pub fn play<T>(mut my_board: board::Board<T>) 
     where T: pieces::Piece
 {
+    my_board.update_board();
     my_board.show();
     let mut turn = "white";
     loop {
