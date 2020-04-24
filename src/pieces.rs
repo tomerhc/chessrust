@@ -215,9 +215,28 @@ impl Piece for Rook {
 
     fn calc_legal_moves(&self, board_state: HashMap<String, Vec<Pos>>) -> Option<Vec<Pos>> {
         let mut possible = vec![];
-        //let Pos(my_x, my_y) = self.position;
+        let Pos(my_x, my_y) = self.position;
         let col_len = board_state.get("col").unwrap().len();
         let row_len = board_state.get("row").unwrap().len();
+
+        if col_len == 0 {
+            if my_x > 0 {
+                possible.push(Pos(my_x-1, my_y));
+            }
+            if my_x < 7 {
+                possible.push(Pos(my_x+1, my_y));
+            }
+        }
+
+        if row_len == 0 {
+            if my_y > 0 {
+                possible.push(Pos(my_x, my_y-1));
+            }
+            if my_y < 7 {
+                possible.push(Pos(my_x, my_y+1));
+            }
+        }
+
 
         for (index, i) in board_state.get("col").unwrap().into_iter().enumerate(){
             let Pos(x,y) = *i;
@@ -276,6 +295,137 @@ impl Piece for Rook {
             String::from("r")
         }else{
             String::from("R")
+        }
+    }
+
+    fn get_cur_pos(&self) -> Pos {
+        self.position.clone()
+    }
+
+    fn get_color(&self) -> bool {
+        self.color
+    }
+
+    fn get_piece_type(&self) -> String {
+        self.piece_type.clone()
+    }
+}
+
+pub struct Bisop {
+    pub color: bool,
+    pub position: Pos,
+    pub legal_moves: Option<Vec<Pos>>,
+    pub piece_type: String,
+}
+
+impl Bisop {
+    pub fn new(color:bool) -> Bisop {
+        Bisop {
+            color: color,
+            position: Pos(0,0),
+            legal_moves: None,
+            piece_type: String::from("bisop")
+        }
+    }
+}
+
+
+impl Piece for Bisop {
+
+    fn init(&mut self, num: u8, board_state: HashMap<String, Vec<Pos>>){
+        self.position = self.set_init_pos(num);
+        self.legal_moves = self.calc_legal_moves(board_state);
+    }
+
+    fn set_init_pos(&self, num: u8) -> Pos {
+        let y = if num == 0 {2} else {5};
+        match self.color{
+            true => Pos(7, y as u8),
+            false => Pos(0, y as u8)
+        }
+    }
+
+    fn calc_legal_moves(&self, board_state: HashMap<String, Vec<Pos>>) -> Option<Vec<Pos>> {
+        let mut possible = vec![];
+        let Pos(my_x, my_y) = self.position;
+        let diag1_len = board_state.get("diag1").unwrap().len();
+        let diag2_len = board_state.get("diag2").unwrap().len();
+
+        if diag1_len == 0 {
+            if my_x > 0 && my_y < 7{
+                possible.push(Pos(my_x-1, my_y+1));
+            }
+            if my_x < 7 && my_y > 0{
+                possible.push(Pos(my_x+1, my_y-1));
+            }
+        }
+
+        if diag2_len == 0 {
+            if my_y > 0 && my_x > 0{
+                possible.push(Pos(my_x-1, my_y-1));
+            }
+            if my_y < 7 && my_x < 7{
+                possible.push(Pos(my_x+1, my_y+1));
+            }
+        }
+
+        for (index, i) in board_state.get("diag1").unwrap().into_iter().enumerate(){
+            let Pos(x,y) = *i;
+            if index == 0 && x > 0 && y < 7 {
+                possible.push(Pos(x-1,y+1));
+            }
+            if index == diag1_len-1 && x < 7 && y > 7 {
+                possible.push(Pos(x+1,y-1));
+            }
+            
+            possible.push(Pos(x,y));
+        }
+        
+        for (index, i) in board_state.get("diag2").unwrap().into_iter().enumerate(){
+            let Pos(x,y) = *i;
+            if index == 0 && y > 0 && x > 0{
+                possible.push(Pos(x-1, y-1));
+            }
+            if index == diag2_len-1 && y < 7 && x < 7{
+                possible.push(Pos(x+1, y+1));
+            }
+            
+            possible.push(Pos(x,y));
+        }
+        
+        Some(possible) 
+    }
+
+    fn update_legal_moves(&mut self, board_state: HashMap<String, Vec<Pos>>) {
+        self.legal_moves = self.calc_legal_moves(board_state);
+    }
+
+
+    fn move_piece(&mut self, board_state: HashMap<String, Vec<Pos>>, pos: Pos) -> bool{
+        let Pos(x_new, y_new) = pos;
+        match &self.legal_moves {
+            Some(v) => { 
+                if v.iter().any(|&Pos(x,y)| x==x_new && y==y_new){
+                    self.position = pos;
+                    self.legal_moves = self.calc_legal_moves(board_state);
+                    return true;
+                } else {
+                    println!("illigal move");
+                    return false;
+                }
+            },
+            None => {
+                println!("illigal move");
+                return false;
+            }
+        }
+    }
+
+    fn show(&self) -> String{
+        if self.color{
+            String::from("b")
+        }else{
+            String::from("B")
         }
     }
 

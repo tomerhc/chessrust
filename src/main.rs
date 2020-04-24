@@ -20,6 +20,14 @@ fn main() {
         white_rooks.push(rook);
     }
 
+    let mut white_bisops= vec![];
+    for i in 0..2{
+        let mut bisop = pieces::Bisop::new(false);
+        let y = if i == 0 {0} else {7};
+        bisop.init(i, board.get_state(pieces::Pos(7, y)));
+        white_bisops.push(bisop);
+    }
+
     let length  = white_pawns.len();
     for _ in 0..length {
         board.put_piece(Box::new(white_pawns.pop().unwrap()));
@@ -28,6 +36,11 @@ fn main() {
     let length  = white_rooks.len();
     for _ in 0..length {
         board.put_piece(Box::new(white_rooks.pop().unwrap()));
+    }
+
+    let length  = white_bisops.len();
+    for _ in 0..length {
+        board.put_piece(Box::new(white_bisops.pop().unwrap()));
     }
 
     let mut black_pawns = vec![];
@@ -44,7 +57,14 @@ fn main() {
         rook.init(i, board.get_state(pieces::Pos(0, y)));
         black_rooks.push(rook);
     }
-
+    
+    let mut black_bisops = vec![];
+    for i in 0..2{
+        let mut bisop = pieces::Bisop::new(true);
+        let y = if i == 0 {0} else {7};
+        bisop.init(i, board.get_state(pieces::Pos(0, y)));
+        black_bisops.push(bisop);
+    }
     
     let length  = black_pawns.len();
     for _ in 0..length {
@@ -54,6 +74,11 @@ fn main() {
     let length  = black_rooks.len();
     for _ in 0..length {
         board.put_piece(Box::new(black_rooks.pop().unwrap()));
+    }
+    
+    let length  = black_bisops.len();
+    for _ in 0..length {
+        board.put_piece(Box::new(black_bisops.pop().unwrap()));
     }
     //let state = board.get_state(pieces::Pos(3,3));
     //let mut bla = vec![];
